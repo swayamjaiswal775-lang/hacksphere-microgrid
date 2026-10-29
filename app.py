@@ -17,8 +17,15 @@ import engine
 import predict as predictor
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+# Normal layout: static/ and data/ sub-folders.  Flat layout (every file in one folder, which is what you get when
+# files are uploaded to GitHub without their folders) is also supported.
 STATIC = os.path.join(ROOT, "static")
-SAMPLE_CSV = os.path.join(ROOT, "data", "sample_test_input.csv")
+if not os.path.isdir(STATIC):
+    STATIC = ROOT
+SAMPLE_CSV = next((p for p in (os.path.join(ROOT, "data", "sample_test_input.csv"),
+                               os.path.join(ROOT, "sample_test_input.csv")) if os.path.isfile(p)),
+                  os.path.join(ROOT, "data", "sample_test_input.csv"))
+STATIC_EXT = {".html", ".js", ".css", ".woff2", ".png", ".svg", ".ico"}   # never serve .py / .json / .csv files
 MAX_BODY = 2 * 1024 * 1024
 
 try:
@@ -132,7 +139,8 @@ class Handler(BaseHTTPRequestHandler):
     def _static(self, path):
         rel = "index.html" if path in ("", "/") else path.lstrip("/")
         full = os.path.realpath(os.path.join(STATIC, rel))
-        if not full.startswith(os.path.realpath(STATIC) + os.sep) or not os.path.isfile(full):
+        if (not full.startswith(os.path.realpath(STATIC) + os.sep) or not os.path.isfile(full)
+                or os.path.splitext(full)[1].lower() not in STATIC_EXT):
             return self._error(404, "Not found.")
         ctype = mimetypes.guess_type(full)[0] or "application/octet-stream"
         if ctype.startswith("text/") or ctype in ("application/javascript", "application/json"):

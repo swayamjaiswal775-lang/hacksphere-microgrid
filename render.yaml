@@ -1,0 +1,9 @@
+# Render "Blueprint": lets you deploy this repo to Render's free tier with a few clicks.
+services:
+  - type: web
+    name: microgrid-dispatch
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 -u app.py
+    healthCheckPath: /api/health
