@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*.pyc
+predictions.csv
+node_modules/
+.catalyst/

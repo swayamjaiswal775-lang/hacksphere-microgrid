@@ -1,0 +1,11 @@
+{
+  "command": "python3 -u app.py",
+  "stack": "python_3_9",
+  "env_variables": {
+    "CATALYST_ENVIRONMENT": "Development",
+    "ZOHO_ACCOUNTS_URL": "https://accounts.zoho.in",
+    "QUICKML_MODE": "auto"
+  },
+  "memory": 256,
+  "catalyst_auth": false
+}
